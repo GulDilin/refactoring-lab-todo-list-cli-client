@@ -1,8 +1,8 @@
 package guldilin.commands;
 
-import guldilin.dto.ErrorDTO;
 import guldilin.dto.TaskDTO;
 import guldilin.util.ClientFactoryBuilder;
+import guldilin.util.StringUtils;
 import guldilin.util.Requests;
 
 import javax.ws.rs.client.Client;
@@ -10,27 +10,33 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
 public class CreateCommand implements Command {
+    private final String dateFormat = "yyyy-MM-dd";
+    private final DateTimeFormatter dateFormatter;
+
+    public CreateCommand() {
+        this.dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
+    }
+
     @Override
     public void execute(Scanner in, URL baseUrl) {
         System.out.println("New task");
         String title = this.enterTitle(in);
         String description = enterDescription(in);
-        Date deadline = enterDeadline(in);
-        System.out.println(deadline);
+        LocalDate deadline = enterDeadline(in);
+        String deadlineString = dateFormatter.format(deadline);
         List<String> tags = enterTags(in);
         TaskDTO task = TaskDTO
                 .builder()
                 .title(title)
                 .description(description)
-                .deadline(deadline)
+                .deadline(deadlineString)
                 .tags(tags)
                 .build();
 
@@ -47,9 +53,6 @@ public class CreateCommand implements Command {
         }
     }
 
-    private boolean isBlank(String str) {
-        return str.isEmpty() || str.replaceAll(" ", "").isEmpty();
-    }
 
     private String enterTitle(Scanner in) {
         String title = null;
@@ -57,7 +60,7 @@ public class CreateCommand implements Command {
         while (title == null) {
             System.out.print("Title: ");
             userInput = in.nextLine();
-            if (this.isBlank(userInput)) {
+            if (StringUtils.isBlank(userInput)) {
                 System.out.println("Cannot be blank");
                 continue;
             }
@@ -69,31 +72,31 @@ public class CreateCommand implements Command {
     private List<String> enterTags(Scanner in) {
         List<String> tags = new LinkedList<>();
         int currentIndex = 1;
+        System.out.println("Enter tags (finish on empty line):");
         while (true) {
             System.out.print(currentIndex + ": ");
             String tag = in.nextLine();
-            if (this.isBlank(tag)) break;
+            if (StringUtils.isBlank(tag)) break;
             tags.add(tag);
             currentIndex++;
         }
         return tags;
     }
 
-    private Date enterDeadline(Scanner in) {
+    private LocalDate enterDeadline(Scanner in) {
         while (true) {
-            System.out.print("Deadline: ");
+            System.out.print("Deadline (" + dateFormat + "): ");
             String userInput = in.nextLine();
-            SimpleDateFormat parser = new SimpleDateFormat("dd.MM.yyyy");
             try {
-                return parser.parse(userInput);
-            } catch (ParseException e) {
-                System.out.println("Cannot parse date format dd.MM.yyyy");
+                return LocalDate.parse(userInput, dateFormatter);
+            } catch (Exception e) {
+                System.out.println("Cannot parse date format " + dateFormat);
             }
         }
     }
 
     private String enterDescription(Scanner in) {
-        System.out.println("Description: ");
+        System.out.print("Description: ");
         return in.nextLine();
     }
 }

@@ -58,6 +58,7 @@ public class MainHandler {
             } catch (ExitException e) {
                 isWorking = false;
             }
+            printMenu();
         }
     }
 

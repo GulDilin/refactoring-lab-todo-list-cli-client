@@ -22,7 +22,11 @@ public class Main {
 
 
         client = new MainHandler(baseUrl);
-        if (!client.isServerAvailable()) {
+        boolean isServerAvailable = false;
+        try {
+            isServerAvailable = client.isServerAvailable();
+        } catch (Exception ex) { /*ignore*/ }
+        if (!isServerAvailable) {
             System.err.println(ErrorMessage.SERVER_UNAVAILABLE);
             return;
         }
