@@ -56,7 +56,7 @@ public class CreateCommand implements Command {
 
     private String enterTitle(Scanner in) {
         String title = null;
-        String userInput = null;
+        String userInput;
         while (title == null) {
             System.out.print("Title: ");
             userInput = in.nextLine();

@@ -15,8 +15,8 @@ public class Requests {
             try {
                 ValidationErrorDTO errorDTO = response.readEntity(ValidationErrorDTO.class);
                 System.out.println(errorDTO.getError());
-                errorDTO.getMessage().entrySet().stream().forEach(
-                        es -> System.out.println("Error: " + es.getKey() + " - " + es.getValue()));
+                errorDTO.getMessage()
+                        .forEach((key, value) -> System.out.println("Error: " + key + " - " + value));
             } catch (Exception x) {
                 System.out.println("Error happened");
             }
