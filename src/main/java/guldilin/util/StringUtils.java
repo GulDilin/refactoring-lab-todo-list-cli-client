@@ -5,4 +5,7 @@ public class StringUtils {
         return str.isEmpty() || str.replaceAll(" ", "").isEmpty();
     }
 
+    public static String normalize(String str) {
+        return str.trim().replaceAll("( )+", " ");
+    }
 }

@@ -35,10 +35,7 @@ public class ShowLastCommand implements Command {
                 System.out.println("Cannot be blank");
                 continue;
             }
-            return Arrays.asList(
-                    userLine.trim()
-                            .replaceAll("( )+", " ")
-                            .split(" "));
+            return Arrays.asList(StringUtils.normalize(userLine).split(" "));
         }
 
     }
