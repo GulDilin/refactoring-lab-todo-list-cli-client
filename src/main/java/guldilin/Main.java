@@ -11,6 +11,7 @@ public class Main {
         final MainHandler client;
         if (args.length < 1) {
             System.err.println(ErrorMessage.URL_PARAMETER_REQUIRED);
+            return;
         }
         URL baseUrl;
         try {

@@ -10,6 +10,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URL;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class MainHandler {
@@ -49,7 +50,11 @@ public class MainHandler {
         printMenu();
         while (isWorking) {
             printPromt();
-            userString = this.scanner.nextLine();
+            try {
+                userString = this.scanner.nextLine();
+            } catch (NoSuchElementException e) {
+                isWorking = false;
+            }
             if (!this.isCommandCorrect(userString)) continue;
             Command command = parser.parse(userString);
             if (command == null) continue;
